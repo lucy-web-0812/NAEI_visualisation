@@ -1,0 +1,19 @@
+"Introduction","...2","...3","...4"
+"This spreadsheet contains reporting table templates for the UNECE/EMEP 2014 
+GUIDELINES FOR REPORTING EMISSIONS AND PROJECTIONS DATA UNDER THE CONVENTION ON LONG-RANGE TRANSBOUNDARY AIR POLLUTION",NA,NA,NA
+NA,NA,NA,NA
+"Summary of tables included in this spreadsheet:",NA,NA,NA
+"Table","Type","Description","Note"
+"2005","Reporting Template","National sectoral emissions for 2005 as the compliance base year","For historical data only (2005 and base year), the ""inventory version"" is the submission year of the historical data. Where the data is different to an official submission, then a ""v2"" or other relevant descriptor should be added to the year. See footnotes in relevant sheets."
+"PROJ_BASE_YEAR","Reporting Template","National sectoral emissions for the base year used for projections reporting","The projections ""base year"" is the year from the historical timeseries which the projections are based on. See footnote (a) in the relevant sheet.
+"
+"2025_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2025",NA
+"2030_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2030",NA
+"2035_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2035",NA
+"2040_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2040",NA
+"2045_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2045",NA
+"2050_WM","Reporting Template","Projected national sectoral emissions (With Measures) for 2050",NA
+NA,NA,NA,NA
+"Please note that definitions of 'With Measures' and 'With Additional Measures' projections are provided in the UNECE/EMEP 2014 Reporting Guidelines (point 13).",NA,NA,NA
+"Please add additional sheets for where WM and WAM projections for 2035, 2040 and 2050 are available.",NA,NA,NA
+"Only those pollutants that are required to be reported under the Gothenburg Protocol / NECD are mandatory and other pollutants can be provided where available.",NA,NA,NA
