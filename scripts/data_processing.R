@@ -208,7 +208,7 @@ ggplot(combined_historic_and_projected_filtered) +
   facet_wrap(~source_description, scales = "free_y")
 
 
-write.csv(combined_historic_and_projected, file = "developing_dashboard/combined_historic_and_projected.csv")
+write.csv(combined_historic_and_projected, file = "data/combined_historic_and_projected.csv")
 
 
 

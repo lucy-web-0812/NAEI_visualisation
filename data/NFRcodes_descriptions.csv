@@ -48,13 +48,13 @@
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2b,"Natural Gas: Exploration, production, transport"
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2c,"Venting and flaring of oil, gas, combined oil and gas"
 2,Industrial Processes and Product Use,2,Industrial Processes and Product Use,2,Industrial Processes and Product Use
-2A,Mineral Products,2A,Mineral Products,2A,Mineral Products
-2A,Mineral Products,2A1,Cement Production,2A1,Cement Production
-2A,Mineral Products,2A2,Lime Production,2A2,Lime Production
-2A,Mineral Products,2A3,Glass Production,2A3,Glass Production
-2A,Mineral Products,2A5,Quarrying and mining of minerals other than coal,2A5a,Quarrying and mining of minerals other than coal
-2A,Mineral Products,2A5,Construction and Demolition,2A5b,Construction and Demolition
-2A,Mineral Products,2A6,Other mineral products,2A6,Other mineral products
+2A,Industrial Processes and Product Use,2A,Mineral Products,2A,Mineral Products
+2A,Industrial Processes and Product Use,2A1,Cement Production,2A1,Cement Production
+2A,Industrial Processes and Product Use,2A2,Lime Production,2A2,Lime Production
+2A,Industrial Processes and Product Use,2A3,Glass Production,2A3,Glass Production
+2A,Industrial Processes and Product Use,2A5,Quarrying and mining of minerals other than coal,2A5a,Quarrying and mining of minerals other than coal
+2A,Industrial Processes and Product Use,2A5,Construction and Demolition,2A5b,Construction and Demolition
+2A,Industrial Processes and Product Use,2A6,Other mineral products,2A6,Other mineral products
 2B,Chemical Industry,2B,Chemical Industry,2B,Chemical Industry
 2B,Chemical Industry,2B1,Ammonia Production,2B1,Ammonia Production
 2B,Chemical Industry,2B1,Ammonia Production,2B10a,Other
@@ -89,54 +89,54 @@
 2I,Wood Processing,2I,Wood Processing,2I,Wood Processing
 2K,Consumption of POPs and heavy metals,2K,Consumption of POPs and heavy metals,2K,Consumption of POPs and heavy metals
 3,Agriculture,3,Agriculture,3,Agriculture
-3B,Manure Management,3B,Manure Management,3B,Manure Management
-3B,Manure Management,3B1,Dairy cattle,3B1a,Dairy cattle
-3B,Manure Management,3B1,Non-dairy cattle,3B1b,Non-dairy cattle
-3B,Manure Management,3B2,Sheep,3B2,Sheep
-3B,Manure Management,3B3,Swine,3B3,Swine
-3B,Manure Management,3B4,Goats,3B4d,Goats
-3B,Manure Management,3B4,Horses,3B4e,Horses
-3B,Manure Management,3B4,Laying hens,3B4gi,Laying hens
-3B,Manure Management,3B4,Broilers,3B4gii,Broilers
-3B,Manure Management,3B4,Turkeys,3B4giii,Turkeys
-3B,Manure Management,3B4,Other poultry,3B4giv,Other poultry
-3B,Manure Management,3B4,other animals,3B4h,other animals
-3D,Agricultural soils,3D,Agricultural soils,3D,Agricultural soils
-3D,Agricultural soils,3Da,Inorganic N-fertilizers (includes urea application),3Da1,Inorganic N-fertilizers (includes urea application)
-3D,Agricultural soils,3Da,Animal manure applied to soils,3Da2a,Animal manure applied to soils
-3D,Agricultural soils,3Da,Sewage sludge applied to soils,3Da2b,Sewage sludge applied to soils
-3D,Agricultural soils,3Da,Other organic fertilisers applied to soils,3Da2c,Other organic fertilisers applied to soils
-3D,Agricultural soils,3Da,Urine and dung deposited by grazing animals,3Da3,Urine and dung deposited by grazing animals
-3D,Agricultural soils,3Da,Crop residues applied to soils,3Da4,Crop residues applied to soils
-3D,Agricultural soils,3Db,Indirect emissions from managed soils,3Db,Indirect emissions from managed soils
-3D,Agricultural soils,3Dc,"Farm-level agricultural operations including storage, handling and transport of agricultural products",3Dc,"Farm-level agricultural operations including storage, handling and transport of agricultural products"
-3D,Agricultural soils,3De,Cultivated crops,3De,Cultivated crops
-3D,Agricultural soils,3Df,Use of pesticides,3Df,Use of pesticides
-3F,Field burning of agricultural waste,3F,Field burning of agricultural waste,3F,Field burning of agricultural waste
-3I,Other,3I,Other,3I,Other
+3B,Agriculture,3B,Manure Management,3B,Manure Management
+3B,Agriculture,3B1,Manure Management,3B1a,Dairy cattle
+3B,Agriculture,3B1,Manure Management,3B1b,Non-dairy cattle
+3B,Agriculture,3B2,Manure Management,3B2,Sheep
+3B,Agriculture,3B3,Manure Management,3B3,Swine
+3B,Agriculture,3B4,Manure Management,3B4d,Goats
+3B,Agriculture,3B4,Manure Management,3B4e,Horses
+3B,Agriculture,3B4,Manure Management,3B4gi,Laying hens
+3B,Agriculture,3B4,Manure Management,3B4gii,Broilers
+3B,Agriculture,3B4,Manure Management,3B4giii,Turkeys
+3B,Agriculture,3B4,Manure Management,3B4giv,Other poultry
+3B,Agriculture,3B4,Manure Management,3B4h,other animals
+3D,Agriculture,3D,Agricultural soils,3D,Agricultural soils
+3D,Agriculture,3Da,Agricultural soils,3Da1,Inorganic N-fertilizers (includes urea application)
+3D,Agriculture,3Da,Agricultural soils,3Da2a,Animal manure applied to soils
+3D,Agriculture,3Da,Agricultural soils,3Da2b,Sewage sludge applied to soils
+3D,Agriculture,3Da,Agricultural soils,3Da2c,Other organic fertilisers applied to soils
+3D,Agriculture,3Da,Agricultural soils,3Da3,Urine and dung deposited by grazing animals
+3D,Agriculture,3Da,Agricultural soils,3Da4,Crop residues applied to soils
+3D,Agriculture,3Db,Agricultural soils,3Db,Indirect emissions from managed soils
+3D,Agriculture,3Dc,Agricultural soils,3Dc,"Farm-level agricultural operations including storage, handling and transport of agricultural products"
+3D,Agriculture,3De,Agricultural soils,3De,Cultivated crops
+3D,Agriculture,3Df,Agricultural soils,3Df,Use of pesticides
+3F,Agriculture,3F,Field burning of agricultural waste,3F,Field burning of agricultural waste
+3I,Agriculture,3I,Other,3I,Other
 5,Waste,5,Waste,5,Waste
-5A,Solid Waste disposal on land,5A,Solid Waste disposal on land,5A,Solid Waste disposal on land
-5B,Biological treatment of waste,5B,Biological treatment of waste,5B,Biological treatment of waste
-5B,Biological treatment of waste,5B1,Composting,5B1,Composting
-5B,Biological treatment of waste,5B2,Biological treatment of waste - Anaerobic digestion at biogas facilities,5B2,Biological treatment of waste - Anaerobic digestion at biogas facilities
-5C,Waste Incineration,5C,Waste Incineration,5C,Waste Incineration
-5C,Waste Incineration,5C1,Municipal waste incineration,5C1a,Municipal waste incineration
-5C,Waste Incineration,5C1,Hazardous waste incineration,5C1bii,Hazardous waste incineration
-5C,Waste Incineration,5C1,Clinical waste incineration,5C1biii,Clinical waste incineration
-5C,Waste Incineration,5C1,Sewage sludge incineration,5C1biv,Sewage sludge incineration
-5C,Waste Incineration,5C1,Cremation,5C1bv,Cremation
-5C,Waste Incineration,5C2,Open burning of waste,5C2,Open burning of waste
-5D,Waste-water handling,5D,Waste-water handling,5D,Waste-water handling
-5D,Waste-water handling,5D1,Domestic,5D1,Domestic
-5D,Waste-water handling,5D2,Industrial,5D2,Industrial
-5E,Other Waste  ,5E,Other Waste  ,5E,Other Waste  
+5A,Waste,5A,Solid Waste disposal on land,5A,Solid Waste disposal on land
+5B,Waste,5B,Biological treatment of waste,5B,Biological treatment of waste
+5B,Waste,5B1,Biological treatment of waste,5B1,Composting
+5B,Waste,5B2,Biological treatment of waste,5B2,Biological treatment of waste - Anaerobic digestion at biogas facilities
+5C,Waste,5C,Waste Incineration,5C,Waste Incineration
+5C,Waste,5C1,Waste Incineration,5C1a,Municipal waste incineration
+5C,Waste,5C1,Waste Incineration,5C1bii,Hazardous waste incineration
+5C,Waste,5C1,Waste Incineration,5C1biii,Clinical waste incineration
+5C,Waste,5C1,Waste Incineration,5C1biv,Sewage sludge incineration
+5C,Waste,5C1,Waste Incineration,5C1bv,Cremation
+5C,Waste,5C2,Waste Incineration,5C2,Open burning of waste
+5D,Waste,5D,Waste-water handling,5D,Waste-water handling
+5D,Waste,5D1,Waste-water handling,5D1,Domestic
+5D,Waste,5D2,Waste-water handling,5D2,Industrial
+5E,Waste,5E,Other Waste  ,5E,Other Waste  
 6,Other,6,Other,6,Other
 6A,Other,6A,Other,6A,Other
 z_,Forest fires,z_1,Forest fires,z_11B,Forest fires
 z_,Other natural emissions (please specify in the IIR),z_1,Other natural emissions (please specify in the IIR),z_11C,Other natural emissions (please specify in the IIR)
-z_,International aviation cruise (civil),z_1,International aviation cruise (civil),z_1A3ai(ii),International aviation cruise (civil)
-z_,Domestic aviation cruise (civil),z_1,Domestic aviation cruise (civil),z_1A3aii(ii),Domestic aviation cruise (civil)
-z_,International maritime navigation,z_1,International maritime navigation,z_1A3di(i),International maritime navigation
+z_,Fuel Combustion Activities,z_1,Transport,z_1A3ai(ii),International aviation cruise (civil)
+z_,Fuel Combustion Activities,z_1,Transport,z_1A3aii(ii),Domestic aviation cruise (civil)
+z_,Fuel Combustion Activities,z_1,Transport,z_1A3di(i),International maritime navigation
 1A,Fuel Combustion Activities,1A3,Transport,1A3bi(fu),Road transport: Passenger cars (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bii(fu),Road transport: Light duty vehicles (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3biii(fu),Road transport: Heavy duty vehicles and buses (fuel used)
