@@ -2,8 +2,8 @@ library(readxl)
 library(dplyr)
 library(tidyverse)
 library(shiny)
-library(bslib)
 library(plotly)
+library(bslib)
 
 # ---------- Preprocessing required is in the script data_processing ------------
 # The output of this script is the combined_historic_and_projected csv dataset
@@ -11,55 +11,85 @@ library(plotly)
 
 combined_historic_and_projected <- read.csv("data/combined_historic_and_projected.csv") |> 
   mutate(year = as.Date(year, format = "%Y")) |> 
-  select(-"X")
+  select(-"X") |> 
+  filter(is.na(NFR_wide) == FALSE)
 
+
+
+totals <- read.csv("data/totals.csv") |> 
+  mutate(year = as.Date(year, format = "%Y")) |> 
+  select(-"X") |> 
+  pivot_longer(cols = c(emission, emissions_relative_to_baseline), names_to = "emission_type", values_to = "emission_long")
 
 
 # ----- The user interface ------------   
   
-  ui <- fluidPage( 
-    theme = bs_theme(version = 5, bootswatch = "minty"),
+  ui <- fluidPage(
     
-    titlePanel("National Atmospheric Emissions Inventory Visualiser", windowTitle = "NAEI Projections"), 
+    titlePanel("National Atmospheric Emissions Inventory Visualiser", windowTitle = "NAEI Projections"),
     
-    navbarPage(title = "All data is taken from the UK NAEI", inverse = "TRUE",
+    tags$head(
+      tags$style(HTML("
+      .navbar.navbar-inverse {
+        background-color: #7DCD85;
+        border-color: #8FBC8F;
+      }
+      .navbar.navbar-inverse .navbar-brand {
+        color: #FFFFFF;
+      }
+      .navbar.navbar-inverse .navbar-nav > li > a {
+        color: #FFFFFF;
+      }
+     .navbar.navbar-inverse .navbar-nav > li > a:hover,
+      .navbar.navbar-inverse .navbar-nav > li > a:focus {
+        background-color: #FFFFFF !important;
+        color: #7DCD85 !important;
+      }
+      .navbar.navbar-inverse .navbar-nav > .active > a,
+      .navbar.navbar-inverse .navbar-nav > .active > a:hover,
+      .navbar.navbar-inverse .navbar-nav > .active > a:focus {
+        background-color: #FFFFFF !important;
+        color: #7DCD85 !important;
+      }
+    "))
+    ),
+    
+    navbarPage(title = tags$a(href = "https://naei.beis.gov.uk/data/", "All data is taken from the UK NAEI", style = "color: #FFFFFF; text-decoration: none;"), inverse = "TRUE",
+               
+    # First page focusing on the the totals         
+               
+      tabPanel("Totals", 
+                  fluidRow(
+                          column(4, selectInput("relative_or_absolute", "Change the y axis scale:", choices = c("Relative to baseline" = "emissions_relative_to_baseline", "Absolute" = "emission"))), 
+                          column(8, plotlyOutput("totals_plot")) )
+                      ),        
+   # The second page            
+               
       tabPanel("By Source",
                
-               
-  
-    
-    sidebarLayout(
+      sidebarLayout(
       
       sidebarPanel(
-      p("Use the drop down boxes below to select a pollutant, a NFR category and the subcatergories of interest. The graph below is interactive; drag the x and y scales to change them, double click on a dataset to isolate."),
+        
+      p("Use the drop down boxes below to select a pollutant, a NFR category and the subcatergories of interest. The graph below is interactive; drag the x and y scales to change them, double click on a dataset to reset the axes."),
+      
              selectInput("selected_pollutant", "Select Pollutants", choices = unique(combined_historic_and_projected$pollutant), multiple = TRUE),
       
              selectInput("selected_NFR", "Select Category", choices = unique(combined_historic_and_projected$NFR_wide), multiple = TRUE),
       
-             selectInput("selected_source", "Select source", choices = NULL, multiple = TRUE)),
+             selectInput("selected_source", "Select Source", choices = NULL, multiple = TRUE)),
     
       
     mainPanel(
     fluidRow(
-      
-      
-      column(10, plotlyOutput("line_graphs_one_category"))
-      
-     )) 
-      )),
+      column(10, h3("2021 Top Pollution Sources:"), tableOutput("top_sources"))) 
+    ,
+    fluidRow(
+      column(10, h3("Trends over time:"), plotlyOutput("line_graphs_one_category"))
+     )))
     
     
-    tabPanel("Totals", 
-             fluidRow(
-               p("If you are reading this then well done"), 
-               column(4, selectInput("selected_pollutant", "Pollutant", choices = unique(combined_historic_and_projected$pollutant))), 
-               column(8, img(src='millie.png', height = "80%", width = "60%")
-               
-             )       
-             
-    ) 
-    
-    )))
+   )))
       
     
   
@@ -71,11 +101,15 @@ server <- function(input, output, session) {
   
   selected_data <- reactive(combined_historic_and_projected |> # Test to see what one of these looks like
                               filter(pollutant %in% input$selected_pollutant) |> 
-                              filter(NFR_mid != "NA")
+                              filter(NFR_mid != "NA") 
     
   )
   
- 
+  totals_data <- reactive({
+    totals %>%
+      filter(emission_type == input$relative_or_absolute)
+  })
+  
   
   
   selected_data_just_one_category <- reactive(combined_historic_and_projected |> # Test to see what one of these looks like
@@ -91,11 +125,46 @@ server <- function(input, output, session) {
 
   
   selected_source <- reactive({
-    #req(input$selected_source)
+    req(input$selected_source)
     filter(selected_data_just_one_category(), NFR_mid %in% input$selected_source)
   })
   
+  top_sources_table <- reactive({
+    req(input$selected_pollutant) 
+    filter(combined_historic_and_projected, pollutant %in% input$selected_pollutant) |> 
+      mutate(year = substring(as.character(year), 1,4) ) |> 
+      filter(year == "2021") |> 
+      group_by(pollutant) |> 
+      arrange(desc(emission)) |> 
+      do(head(., n=5)) |> 
+      arrange(desc(emission)) 
+  })
+  
+  
+  output$top_sources <- renderTable(top_sources_table() |> 
+                                      select("NFR_code", "pollutant", "emission", "source_description") |> 
+                                      rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (kilotonnes)" = "emission", "Source" = "source_description"))
+  
+  output$totals_plot <- renderPlotly({
+    ggplotly(
+      ggplot(totals_data()) +
+        geom_point(aes(x = year, y = emission_long, colour = pollutant, shape = data_source)) +
+        geom_line(aes(x = year, y = emission_long, colour = pollutant, linetype = data_source)) +
+        scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01"))) +
+        scale_y_continuous(name = "Emissions relative to 1970* baseline", limits = c(0, NA)) +
+        theme_classic() +
+        theme(panel.grid.major.y = element_line(colour = "lightgrey"),
+              strip.background = element_rect(colour = "white"),
+              strip.placement = "bottom") +
+        theme(legend.position = "none") +
+        theme(axis.title = element_text(size = 20)),
+      height = 600,
+      width = 1000
+    )
+  })
 
+    
+  
   
   output$line_graphs_one_category <- renderPlotly({
     
@@ -105,17 +174,16 @@ server <- function(input, output, session) {
     ggplot(selected_source()) +
       geom_line(aes(x=year, y = emission, colour = source_description, linetype = status)) +
       geom_point(aes(x=year, y = emission, colour = source_description, shape = status)) +
-      ggtitle(label = "Emissions from selected source:") +
       scale_y_continuous(name = "Emissions (kilotonnes)", limits = c(0,NA)) +
-      facet_wrap(~pollutant + NFR_wide, scales = "free", ncol = 2) +
+      facet_wrap(~pollutant + NFR_wide, scales = "fixed", ncol = 2) +
       scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01"))) +
       theme_classic() +
       theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
             strip.background = element_rect(colour = "white"), 
             strip.placement = "bottom") +
       theme(legend.position = "none") +
-      theme(axis.title = element_text(size = 20, face = "bold"), 
-            strip.text = element_text(size = 10, face = "bold")), height = 600, width = 1000)
+      theme(axis.title = element_text(size = 20), 
+            strip.text = element_text(size = 10)), height = 600, width = 1000)
     })
   
   

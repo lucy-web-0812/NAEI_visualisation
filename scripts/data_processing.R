@@ -145,7 +145,14 @@ air_pollutants <- read.csv("data/air_pollutants_historic_emissions.csv")
 
 pm_pollutants <- read.csv("data/particulate_matter_historic_emissions.csv")
 
-historic_emissions_raw <- rbind(air_pollutants, pm_pollutants) |> 
+additional_columns <- as.character(c("X1970","X1971", "X1972", "X1973", "X1974", "X1975", "X1976", "X1977", "X1978", "X1979"))
+
+NH3_pollutants <- read.csv("data/NH3_data.csv") |> 
+  mutate(!!!setNames(rep(NA, length(additional_columns)), additional_columns)) |> 
+  relocate("X1970":"X1979", .after = "Units") |> 
+  mutate(Gas = "NH3")
+
+historic_emissions_raw <- rbind(air_pollutants, pm_pollutants,NH3_pollutants) |> 
   select(-"Units") # Can get rid of the units column as all in kilotonnes
 
 colnames(historic_emissions_raw) <- c("pollutant","NFR_code", "source", "activity", seq(1970,2021, by = 1))
@@ -185,7 +192,7 @@ baseline_emissions <-  historic_emissions |>
 
 combined_historic_and_projected <- processed_data_frame |> 
   select(-c(NFR_wide, source)) |> 
-  filter(pollutant %in% c("NOx\n(as NO2)", "NMVOC", "SOx \n(as SO2)",  "PM2.5", "PM10", "CO")) |> 
+  filter(pollutant %in% c("NOx\n(as NO2)", "NH3", "NMVOC", "SOx \n(as SO2)",  "PM2.5", "PM10", "CO")) |> 
   mutate(pollutant = ifelse(pollutant == "NOx\n(as NO2)", "Nitrogen oxides (NOx expressed as NO2)", pollutant)) |> # Renaming the pollutants to make consistent between the datasets. 
   mutate(pollutant = ifelse(pollutant == "NMVOC", "Non Methane VOC", pollutant)) |> 
   mutate(pollutant = ifelse(pollutant == "CO", "Carbon Monoxide", pollutant)) |> 

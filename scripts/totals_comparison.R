@@ -19,7 +19,7 @@ baseline_emissions <- historic_totals |>  # e.g. what the emissions where at the
 
 projected_totals <- total_emissions_by_year |> 
   filter(NFR_code == "NATIONAL TOTAL") |> 
-  select(!c(NFR_code, NFR_narrow)) |> 
+  select(!c(NFR_code, status, source)) |> 
   mutate(data_source = "projected") |> 
   mutate(pollutant = ifelse(pollutant == "NOx\n(as NO2)", "NOx (as NO2)", pollutant), 
          pollutant = ifelse(pollutant == "SOx \n(as SO2)", "SOx (as SO2)", pollutant)) 
@@ -31,7 +31,7 @@ totals <- rbind(historic_totals, projected_totals) |>
   left_join(baseline_emissions) |> 
   mutate(emissions_relative_to_baseline = emission/baseline_emission * 100)
 
-
+write.csv(totals, file = "data/totals.csv")
 
 
 ggplot(totals) +
