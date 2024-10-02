@@ -5,6 +5,7 @@ library(shiny)
 library(plotly)
 library(bslib)
 library(scales)
+library(RColorBrewer)
 
 # ---------- Preprocessing required is in the script data_processing ------------
 # The output of this script is the combined_historic_and_projected csv dataset
@@ -22,6 +23,17 @@ totals <- read.csv("data/totals.csv") |>
   select(-"X") |> 
   pivot_longer(cols = c(emission, emissions_relative_to_baseline), names_to = "emission_type", values_to = "emission_long")
 
+
+
+n_colours <- length(unique(combined_historic_and_projected$source_description)) 
+
+
+source_colour_mappings <- data.frame( 
+  source_description = unique(combined_historic_and_projected$source_description), 
+  colour = sample(colorRampPalette(brewer.pal(9, "Set1"))(n_colours), n_colours) # Sample makes the colours random rather than in order
+  )
+
+colour_mappings <- setNames(source_colour_mappings$colour, source_colour_mappings$source_description)
 
 # ----- The user interface ------------   
   
@@ -92,9 +104,7 @@ totals <- read.csv("data/totals.csv") |>
       
              selectInput("selected_pollutant", "Select Pollutants", choices = unique(combined_historic_and_projected$pollutant), multiple = TRUE),
       
-             selectInput("selected_NFR", "Select Category", choices = unique(combined_historic_and_projected$NFR_wide), multiple = TRUE),
-      
-             selectInput("selected_source", "Select Source", choices = NULL, multiple = TRUE),
+             selectInput("selected_source", "Select Source", choices = unique(combined_historic_and_projected$source_description), multiple = TRUE),
       
       h3("2021 top pollution sources:"), tableOutput("top_sources")),  
     
@@ -129,23 +139,12 @@ server <- function(input, output, session){
   })
   
   
-  
-  selected_data_just_one_category <- reactive(combined_historic_and_projected |> # Test to see what one of these looks like
+  selected_source <- reactive(combined_historic_and_projected |> # Test to see what one of these looks like
                               filter(pollutant %in% input$selected_pollutant) |> 
-                              filter(NFR_wide %in% input$selected_NFR) 
+                              filter(source_description %in% input$selected_source) 
   )
   
   
-  observeEvent(selected_data_just_one_category(), {
-    choices <- unique(selected_data_just_one_category()$NFR_mid)
-    updateSelectInput(inputId = "selected_source", choices = choices)
-  })
-
-  
-  selected_source <- reactive({
-    req(input$selected_source)
-    filter(selected_data_just_one_category(), NFR_mid %in% input$selected_source)
-  })
   
   top_sources_table <- reactive({
     req(input$selected_pollutant) 
@@ -206,6 +205,7 @@ server <- function(input, output, session){
   output$line_graphs_one_category <- renderPlotly({
     
     req(input$selected_source)
+    req(input$selected_pollutant)
     
     ggplotly(
     ggplot(selected_source()) +
@@ -215,11 +215,13 @@ server <- function(input, output, session){
         "Year:", format(year, "%Y"), "<br>",
         "Emissions:", round(emission, 2), "kilotonnes <br>",
         "Pollutant:", source_description, "<br>",
-        "Data Source:", status
+        "Data Source:", status, "<br>",
+        "NFR Code:", NFR_code
       ))) +
       scale_y_continuous(name = "Emissions (kilotonnes)", limits = c(0,NA)) +
-      facet_wrap(~pollutant + NFR_wide, scales = "fixed", ncol = 2) +
+      facet_wrap(~pollutant , scales = "free_y", ncol = 2) +
       scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01"))) +
+      scale_colour_manual(values = colour_mappings) +
       theme_classic() +
       theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
             strip.background = element_rect(colour = "white"), 
