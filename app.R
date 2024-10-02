@@ -70,8 +70,6 @@ totals <- read.csv("data/totals.csv") |>
   "))
     ),
     
-    
-    
     navbarPage(title = tags$a(href = "https://naei.beis.gov.uk/data/", "All data is taken from the UK NAEI", style = "color: #FFFFFF; text-decoration: none;"), inverse = "TRUE",
                
     # First page focusing on the the totals         
