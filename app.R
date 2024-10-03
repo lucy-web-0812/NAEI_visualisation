@@ -27,6 +27,8 @@ totals <- read.csv("data/totals.csv") |>
 
 n_colours <- length(unique(combined_historic_and_projected$source_description)) 
 
+set.seed(123)
+
 
 source_colour_mappings <- data.frame( 
   source_description = unique(combined_historic_and_projected$source_description), 
@@ -110,11 +112,8 @@ ui <- fluidPage(
                         
                         
                         mainPanel(
-                          # fluidRow(
-                          #   column(10, h3("2021 top pollution sources:"), tableOutput("top_sources"))) 
-                          # ,
                           fluidRow(
-                            column(8, h3("Trends over time:"), plotlyOutput("line_graphs_one_category", height = "90vh"))
+                            column(8, h3("Trends over time:"), plotlyOutput("line_graphs_one_category"))
                           )))
                       
              )))
@@ -220,7 +219,7 @@ server <- function(input, output, session){
                        ))) +
         scale_y_continuous(name = "Emissions (kilotonnes)", limits = c(0,NA)) +
         facet_wrap(~pollutant , scales = "free_y", ncol = 2) +
-        scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01"))) +
+        scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01")), breaks = seq(as.Date("1970-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
         scale_colour_manual(values = colour_mappings) +
         theme_classic() +
         theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
