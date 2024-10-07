@@ -1,4 +1,11 @@
 ﻿Code_2,NFR_wide,Code_3,NFR_mid,NFR Code,Source Description
+2,Industrial Processes and Product Use,2,Industrial Processes and Product Use,2,Industrial Processes and Product Use
+3,Agriculture,3,Agriculture,3,Agriculture
+5,Waste,5,Waste,5,Waste
+6,Other,6,Other,6,Other
+11A,Volcanoes,11A,Volcanoes,11A,Volcanoes
+z_,Forest fires,z_1,Forest fires,11B,Forest fires
+z_,Other natural emissions (please specify in the IIR),z_1,Other natural emissions (please specify in the IIR),11C,Other natural emissions
 1A,Fuel Combustion Activities,1A,Fuel Combustion Activities,1A,Fuel Combustion Activities
 1A,Fuel Combustion Activities,1A1,Energy Industries,1A1,Energy Industries
 1A,Fuel Combustion Activities,1A1,Energy Industries,1A1a,Public electricity and heat production
@@ -15,17 +22,30 @@
 1A,Fuel Combustion Activities,1A2,Manufacturing Industries and Construction,1A2gviii,Stationary combustion in manufacturing industries and construction: Other
 1A,Fuel Combustion Activities,1A3,Transport,1A3,Transport
 1A,Fuel Combustion Activities,1A3,Transport,1A3ai(i),International Aviation
+z_,Fuel Combustion Activities,z_1,Transport,1A3ai(ii),International aviation cruise (civil)
 1A,Fuel Combustion Activities,1A3,Transport,1A3aii(i),Domestic aviation
+z_,Fuel Combustion Activities,z_1,Transport,1A3aii(ii),Domestic aviation cruise (civil)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bi,Road Transport: Passenger Cars
+1A,Fuel Combustion Activities,1A3,Transport,1A3bi(fu),Road transport: Passenger cars (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bii,Road Transport: Light duty vehicles
+1A,Fuel Combustion Activities,1A3,Transport,1A3bii(fu),Road transport: Light duty vehicles (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3biii,Road Transport: Heavy duty vehicles and buses
+1A,Fuel Combustion Activities,1A3,Transport,1A3biii(fu),Road transport: Heavy duty vehicles and buses (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3biv,Road Transport: Mopeds & Motorcycles
+1A,Fuel Combustion Activities,1A3,Transport,1A3biv(fu),Road transport: Mopeds & motorcycles (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bv,Road Transport: Gasoline Evaporations
+1A,Fuel Combustion Activities,1A3,Transport,1A3bv(fu),Road transport: Gasoline evaporation (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bvi,Road Transport: Automobile tyre and brake wear
+1A,Fuel Combustion Activities,1A3,Transport,1A3bvi(fu),Road transport: Automobile tyre and brake wear (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3bvii,Road Transport: Automobile road abrasion
+1A,Fuel Combustion Activities,1A3,Transport,1A3bvii(fu),Road transport: Automobile road abrasion (fuel used)
 1A,Fuel Combustion Activities,1A3,Transport,1A3c,Railways
+z_,Fuel Combustion Activities,z_1,Transport,1A3di(i),International maritime navigation
+1A,Fuel Combustion Activities,1A4,Transport,1A3di(ii),International inland waterways
+z_,Fuel Combustion Activities,z_1,Transport,1A3di(ii),International inland waterways
 1A,Fuel Combustion Activities,1A3,Transport,1A3dii,National Navigation (shipping)
-1A,Fuel Combustion Activities,1A3,Transport,1A3eii,Other
+1A,Fuel Combustion Activities,1A4,Transport,1A3ei,Pipeline transport
+1A,Fuel Combustion Activities,1A3,Transport,1A3eii,Other transport
 1A,Fuel Combustion Activities,1A4,Other Sectors,1A4,Other Sectors
 1A,Fuel Combustion Activities,1A4,Other Sectors,1A4ai,Commercial/Industrial stationary combustion
 1A,Fuel Combustion Activities,1A4,Other Sectors,1A4aii,Commercial/institutional: Mobile
@@ -35,36 +55,40 @@
 1A,Fuel Combustion Activities,1A4,Other Sectors,1A4cii,Off-road vehicles and other machinery from agriculture/forestry/fishing
 1A,Fuel Combustion Activities,1A4,Other Sectors,1A4ciii,Fishing Vessels
 1A,Fuel Combustion Activities,1A5,Other (not elsewhere specified),1A5,Other (not elsewhere specified)
+1A,Fuel Combustion Activities,1A5,Other (not elsewhere specified),1A5a,Other stationary (including military)
 1A,Fuel Combustion Activities,1A5,Other (not elsewhere specified),1A5b,"Other mobile combustion (including military, land based and recreational boats)"
 1B,Fugitive Emissions from Fuels,1B,Fugitive Emissions from Fuels,1B,Fugitive Emissions from Fuels
 1B,Fugitive Emissions from Fuels,1B1,Fugitive Emissions from Solid Fuels,1B1,Fugitive Emissions from Solid Fuels
 1B,Fugitive Emissions from Fuels,1B1,Fugitive Emissions from Solid Fuels,1B1a,Coal Mining and Handling
 1B,Fugitive Emissions from Fuels,1B1,Fugitive Emissions from Solid Fuels,1B1b,Solid fuel transformation
-1B,Fugitive Emissions from Fuels,1B1,Fugitive Emissions from Solid Fuels,1B1c,Other
+1B,Fugitive Emissions from Fuels,1B1,Fugitive Emissions from Solid Fuels,1B1c,Other fugitive emissions
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2,Fugitive Emissions from Oil and Natural Gas
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2ai,"Oil: Exploration, production, transport"
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2aiv,Oil: Refining/storage
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2av,Oil: Distribution
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2b,"Natural Gas: Exploration, production, transport"
 1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2c,"Venting and flaring of oil, gas, combined oil and gas"
-2,Industrial Processes and Product Use,2,Industrial Processes and Product Use,2,Industrial Processes and Product Use
+1B,Fugitive Emissions from Fuels,1B2,Fugitive Emissions from Oil and Natural Gas,1B2d,Other fugitive emissions from energy production
 2A,Industrial Processes and Product Use,2A,Mineral Products,2A,Mineral Products
 2A,Industrial Processes and Product Use,2A1,Cement Production,2A1,Cement Production
 2A,Industrial Processes and Product Use,2A2,Lime Production,2A2,Lime Production
 2A,Industrial Processes and Product Use,2A3,Glass Production,2A3,Glass Production
 2A,Industrial Processes and Product Use,2A5,Quarrying and mining of minerals other than coal,2A5a,Quarrying and mining of minerals other than coal
 2A,Industrial Processes and Product Use,2A5,Construction and Demolition,2A5b,Construction and Demolition
+2A,Industrial Processes and Product Use,2A5,Mineral Products,2A5c,"Storage, handling and transport of mineral products"
 2A,Industrial Processes and Product Use,2A6,Other mineral products,2A6,Other mineral products
 2B,Industrial Processes and Product Use,2B,Chemical Industry,2B,Chemical Industry
 2B,Industrial Processes and Product Use,2B1,Ammonia Production,2B1,Ammonia Production
-2B,Industrial Processes and Product Use,2B1,Ammonia Production,2B10a,Other
+2B,Industrial Processes and Product Use,2B1,Ammonia Production,2B10a,Other ammonia production
 2B,Industrial Processes and Product Use,2B1,Ammonia Production,2B10b,"Storage, handling and transport of chemical products"
 2B,Industrial Processes and Product Use,2B2,Nitric Acid production,2B2,Nitric Acid production
 2B,Industrial Processes and Product Use,2B3,Adipic acid production,2B3,Adipic acid production
+2B,Industrial Processes and Product Use,2B5,Carbide production,2B5,Carbide production
 2B,Industrial Processes and Product Use,2B6,Titanium dioxide production,2B6,Titanium dioxide production
 2B,Industrial Processes and Product Use,2B7,Soda ash production,2B7,Soda ash production
 2C,Industrial Processes and Product Use,2C,Metal production,2C,Metal production
 2C,Industrial Processes and Product Use,2C1,Iron and steel production,2C1,Iron and steel production
+2C,Industrial Processes and Product Use,2C2,Ferroalloys production,2C2,Ferroalloys production
 2C,Industrial Processes and Product Use,2C3,Aluminium production,2C3,Aluminium production
 2C,Industrial Processes and Product Use,2C4,Magnesium production,2C4,Magnesium production
 2C,Industrial Processes and Product Use,2C5,Lead production,2C5,Lead production
@@ -72,35 +96,40 @@
 2C,Industrial Processes and Product Use,2C7,Copper production,2C7a,Copper production
 2C,Industrial Processes and Product Use,2C7,Nickel production,2C7b,Nickel production
 2C,Industrial Processes and Product Use,2C7,Other metal production,2C7c,Other metal production
+2C,Industrial Processes and Product Use,2C8,"Storage, handling and transport of metal products  (please specify in the IIR)",2C7d,"Storage, handling and transport of metal products"
 2D,Industrial Processes and Product Use,2D,Solvents,2D,Solvents
 2D,Industrial Processes and Product Use,2D3,Domestic solvent use including fungicides,2D3a,Domestic solvent use including fungicides
 2D,Industrial Processes and Product Use,2D3,Road paving and asphalt,2D3b,Road paving and asphalt
+2D,Industrial Processes and Product Use,2D4,Asphalt roofing,2D3c,Asphalt roofing
 2D,Industrial Processes and Product Use,2D3,Coating applications,2D3d,Coating applications
 2D,Industrial Processes and Product Use,2D3,Degreasing,2D3e,Degreasing
 2D,Industrial Processes and Product Use,2D3,Dry Cleaning,2D3f,Dry Cleaning
 2D,Industrial Processes and Product Use,2D3,Chemical Products,2D3g,Chemical Products
 2D,Industrial Processes and Product Use,2D3,Printing,2D3h,Printing
 2D,Industrial Processes and Product Use,2D3,Other solvent use,2D3i,Other solvent use
-2G,Industrial Processes and Product Use,2G,Other product use (please specify in the IIR),2G,Other product use (please specify in the IIR)
+2G,Industrial Processes and Product Use,2G,Other product use (please specify in the IIR),2G,Other product use
 2H,Industrial Processes and Product Use,2H,"Pulp and paper industry, food and beverages industry",2H,"Pulp and paper industry, food and beverages industry"
 2H,Industrial Processes and Product Use,2H1,Pulp and paper industry,2H1,Pulp and paper industry
 2H,Industrial Processes and Product Use,2H2,Food and beverages industry,2H2,Food and beverages industry
 2H,Industrial Processes and Product Use,2H3,Other industrial processes,2H3,Other industrial processes
 2I,Industrial Processes and Product Use,2I,Wood Processing,2I,Wood Processing
+2J,Industrial Processes and Product Use,2J,Production of POPs,2J,Production of POPs
 2K,Industrial Processes and Product Use,2K,Consumption of POPs and heavy metals,2K,Consumption of POPs and heavy metals
-3,Agriculture,3,Agriculture,3,Agriculture
+2L,Industrial Processes and Product Use,2L,"Other production, consumption, storage, transportation or handling of bulk products (please specify in the IIR)",2L,"Other production, consumption, storage, transportation or handling of bulk products"
 3B,Agriculture,3B,Manure Management,3B,Manure Management
-3B,Agriculture,3B1,Manure Management,3B1a,Dairy cattle
-3B,Agriculture,3B1,Manure Management,3B1b,Non-dairy cattle
-3B,Agriculture,3B2,Manure Management,3B2,Sheep
-3B,Agriculture,3B3,Manure Management,3B3,Swine
-3B,Agriculture,3B4,Manure Management,3B4d,Goats
-3B,Agriculture,3B4,Manure Management,3B4e,Horses
-3B,Agriculture,3B4,Manure Management,3B4gi,Laying hens
-3B,Agriculture,3B4,Manure Management,3B4gii,Broilers
-3B,Agriculture,3B4,Manure Management,3B4giii,Turkeys
-3B,Agriculture,3B4,Manure Management,3B4giv,Other poultry
-3B,Agriculture,3B4,Manure Management,3B4h,other animals
+3B,Agriculture,3B1,Manure Management,3B1a,Manure Management - Dairy cattle
+3B,Agriculture,3B1,Manure Management,3B1b,Manure Management - Non-dairy cattle
+3B,Agriculture,3B2,Manure Management,3B2,Manure management - Sheep
+3B,Agriculture,3B3,Manure Management,3B3,Manure management - Swine
+3B,Agriculture,3B4,Manure Management,3B4a,Manure management - Buffalo
+3B,Agriculture,3B4,Manure Management,3B4d,Manure management - Goats
+3B,Agriculture,3B4,Manure Management,3B4e,Manure management - Horses
+3B,Agriculture,3B4,Manure Management,3B4f,Manure management - Mules and asses
+3B,Agriculture,3B4,Manure Management,3B4gi,Manure management - Laying hens
+3B,Agriculture,3B4,Manure Management,3B4gii,Manure management - Broilers
+3B,Agriculture,3B4,Manure Management,3B4giii,Manure management - Turkeys
+3B,Agriculture,3B4,Manure Management,3B4giv,Manure management - Other poultry
+3B,Agriculture,3B4,Manure Management,3B4h,Manure management - other animals
 3D,Agriculture,3D,Agricultural soils,3D,Agricultural soils
 3D,Agriculture,3Da,Agricultural soils,3Da1,Inorganic N-fertilizers (includes urea application)
 3D,Agriculture,3Da,Agricultural soils,3Da2a,Animal manure applied to soils
@@ -110,37 +139,28 @@
 3D,Agriculture,3Da,Agricultural soils,3Da4,Crop residues applied to soils
 3D,Agriculture,3Db,Agricultural soils,3Db,Indirect emissions from managed soils
 3D,Agriculture,3Dc,Agricultural soils,3Dc,"Farm-level agricultural operations including storage, handling and transport of agricultural products"
+3D,Agriculture,3Dd,Agricultural soils,3Dd,"Off-farm storage, handling and transport of bulk agricultural products"
 3D,Agriculture,3De,Agricultural soils,3De,Cultivated crops
 3D,Agriculture,3Df,Agricultural soils,3Df,Use of pesticides
 3F,Agriculture,3F,Field burning of agricultural waste,3F,Field burning of agricultural waste
-3I,Agriculture,3I,Other,3I,Other
-5,Waste,5,Waste,5,Waste
+3I,Agriculture,3I,Other,3I,Other agriculture
 5A,Waste,5A,Solid Waste disposal on land,5A,Solid Waste disposal on land
 5B,Waste,5B,Biological treatment of waste,5B,Biological treatment of waste
 5B,Waste,5B1,Biological treatment of waste,5B1,Composting
 5B,Waste,5B2,Biological treatment of waste,5B2,Biological treatment of waste - Anaerobic digestion at biogas facilities
 5C,Waste,5C,Waste Incineration,5C,Waste Incineration
 5C,Waste,5C1,Waste Incineration,5C1a,Municipal waste incineration
+5C,Waste,5C2,Waste Incineration,5C1bi,Industrial waste incineration
 5C,Waste,5C1,Waste Incineration,5C1bii,Hazardous waste incineration
 5C,Waste,5C1,Waste Incineration,5C1biii,Clinical waste incineration
 5C,Waste,5C1,Waste Incineration,5C1biv,Sewage sludge incineration
 5C,Waste,5C1,Waste Incineration,5C1bv,Cremation
+5C,Waste,5C2,Waste Incineration,5C1bvi,Other waste incineration
 5C,Waste,5C2,Waste Incineration,5C2,Open burning of waste
 5D,Waste,5D,Waste-water handling,5D,Waste-water handling
 5D,Waste,5D1,Waste-water handling,5D1,Domestic
 5D,Waste,5D2,Waste-water handling,5D2,Industrial
+5D,Waste,5D3,Waste-water handling,5D3,Other wastewater handling
 5E,Waste,5E,Other Waste  ,5E,Other Waste  
-6,Other,6,Other,6,Other
 6A,Other,6A,Other,6A,Other
-z_,Forest fires,z_1,Forest fires,z_11B,Forest fires
-z_,Other natural emissions (please specify in the IIR),z_1,Other natural emissions (please specify in the IIR),z_11C,Other natural emissions (please specify in the IIR)
-z_,Fuel Combustion Activities,z_1,Transport,z_1A3ai(ii),International aviation cruise (civil)
-z_,Fuel Combustion Activities,z_1,Transport,z_1A3aii(ii),Domestic aviation cruise (civil)
-z_,Fuel Combustion Activities,z_1,Transport,z_1A3di(i),International maritime navigation
-1A,Fuel Combustion Activities,1A3,Transport,1A3bi(fu),Road transport: Passenger cars (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3bii(fu),Road transport: Light duty vehicles (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3biii(fu),Road transport: Heavy duty vehicles and buses (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3biv(fu),Road transport: Mopeds & motorcycles (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3bv(fu),Road transport: Gasoline evaporation (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3bvi(fu),Road transport: Automobile tyre and brake wear (fuel used)
-1A,Fuel Combustion Activities,1A3,Transport,1A3bvii(fu),Road transport: Automobile road abrasion (fuel used)
+6B,Other,6B,Other,6B,Other not included in national total of the entire territory

@@ -13,10 +13,10 @@ library(RColorBrewer)
 
 combined_historic_and_projected <- read.csv("data/combined_historic_and_projected.csv") |> 
   mutate(year = as.Date(year, format = "%Y")) |> 
-  select(-"X") |> 
-  filter(is.na(NFR_wide) == FALSE)
+  select(-"X") 
 
-
+list_of_pollutants_and_units <- read.csv("data/list_of_pollutants.csv") |> 
+  select(-"X")
 
 totals <- read.csv("data/totals.csv") |> 
   mutate(year = as.Date(year, format = "%Y")) |> 
@@ -32,7 +32,7 @@ set.seed(123)
 
 source_colour_mappings <- data.frame( 
   source_description = unique(combined_historic_and_projected$source_description), 
-  colour = sample(colorRampPalette(brewer.pal(9, "Set1"))(n_colours), n_colours) # Sample makes the colours random rather than in order
+  colour = sample(colorRampPalette(brewer.pal(9, "Accent"))(n_colours), n_colours) # Sample makes the colours random rather than in order
 )
 
 colour_mappings <- setNames(source_colour_mappings$colour, source_colour_mappings$source_description)
@@ -84,7 +84,7 @@ ui <- fluidPage(
   "))
   ),
   
-  navbarPage(title = tags$a(href = "https://naei.beis.gov.uk/data/", "All data is taken from the UK NAEI", style = "color: #FFFFFF; text-decoration: none;"), inverse = "TRUE",
+  navbarPage(title = tags$a(href = "https://naei.energysecurity.gov.uk/air-pollutants/air-pollutant-emissions-data", "All data is taken from the UK NAEI", style = "color: #FFFFFF; text-decoration: none;"), inverse = "TRUE",
              
              # First page focusing on the the totals         
              
@@ -108,7 +108,7 @@ ui <- fluidPage(
                           
                           selectInput("selected_source", "Select Source", choices = unique(combined_historic_and_projected$source_description), multiple = TRUE),
                           
-                          h3("2021 top pollution sources:"), tableOutput("top_sources")),  
+                          h3("2022 top pollution sources:"), tableOutput("top_sources")),  
                         
                         
                         mainPanel(
@@ -149,7 +149,7 @@ server <- function(input, output, session){
     req(input$selected_pollutant) 
     filter(combined_historic_and_projected, pollutant %in% input$selected_pollutant) |> 
       mutate(year = substring(as.character(year), 1,4) ) |> 
-      filter(year == "2021") |> 
+      filter(year == "2022") |> 
       group_by(pollutant) |> 
       arrange(desc(emission)) |> 
       do(head(., n=5)) |> 
@@ -159,7 +159,7 @@ server <- function(input, output, session){
   
   output$top_sources <- renderTable(top_sources_table() |> 
                                       select("NFR_code", "pollutant", "emission", "source_description") |> 
-                                      rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (kilotonnes)" = "emission", "Source" = "source_description"))
+                                      rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (variable units)" = "emission", "Source" = "source_description"))
   
   y_axis_label <- reactive({
     if (input$relative_or_absolute == "emission") {
@@ -182,7 +182,7 @@ server <- function(input, output, session){
                          "Data Source:", data_source
                        ))) +
         geom_line(aes(x = year, y = emission_long, colour = pollutant, linetype = data_source)) +
-        scale_color_brewer(palette = "Set1") +
+        scale_color_brewer(palette = "Dark2") +
         scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01")), breaks = seq(as.Date("1970-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
         scale_y_continuous(name =   
                              y_axis_label(), limits = c(0, NA), expand = c(0,0)) +
@@ -199,6 +199,19 @@ server <- function(input, output, session){
   })
   
   
+  # NEED TO CHANGE BECAUSE CAN HAVE MORE THAN ONE POLLUTANT SELECTED AND HENCE MORE THAN ONE UNIT!!! 
+  
+  
+  y_axis_label_correct_units <- reactive({
+    
+    list_of_pollutants_and_units |> 
+      filter(Pollutant == input$selected_pollutant) |> 
+      select(Units) |> 
+      head(1) |> 
+      pull()
+    
+  })
+  
   
   
   output$line_graphs_one_category <- renderPlotly({
@@ -206,20 +219,27 @@ server <- function(input, output, session){
     req(input$selected_source)
     req(input$selected_pollutant)
     
+    # Check if there is data available in selected_source
+    data <- selected_source()
+    
+    # Use validate and need to show a message if no data is available... 
+    validate(
+      need(nrow(data) > 0 & !all(is.na(data$emission)), "No data available for the selected source and pollutant. Please select an alternative"))
+    
     ggplotly(
       ggplot(selected_source()) +
         geom_line(aes(x=year, y = emission, colour = source_description, linetype = status)) +
         geom_point(aes(x=year, y = emission, colour = source_description, shape = status, 
                        text = paste(
                          "Year:", format(year, "%Y"), "<br>",
-                         "Emissions:", round(emission, 2), "kilotonnes <br>",
-                         "Pollutant:", source_description, "<br>",
+                         "Emissions:", round(emission, 2), y_axis_label_correct_units(),  "<br>",
+                         "Pollution source:", source_description, "<br>",
                          "Data Source:", status, "<br>",
                          "NFR Code:", NFR_code
                        ))) +
-        scale_y_continuous(name = "Emissions (kilotonnes)", limits = c(0,NA)) +
+        scale_y_continuous(name = paste0("Emissions (", y_axis_label_correct_units(), ")"), limits = c(0,NA)) +
         facet_wrap(~pollutant , scales = "free_y", ncol = 2) +
-        scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01")), breaks = seq(as.Date("1970-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
+        scale_x_date(name = "Year", limits = as.Date(c("1990-01-01", "2050-01-01")), breaks = seq(as.Date("1990-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
         scale_colour_manual(values = colour_mappings) +
         theme_classic() +
         theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
