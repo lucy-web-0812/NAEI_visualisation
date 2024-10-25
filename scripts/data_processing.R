@@ -243,7 +243,20 @@ write.csv(combined_historic_and_projected, file = "data/combined_historic_and_pr
 
  
 
+# Attempting to also add in the Greenhouse Gas Data.... 
 
+
+ghg_data <- read_csv("data/greenhouse_gases_1990_to_2022.csv") |> 
+  pivot_longer(cols = c("1990":"2022"), names_to = "year", values_to = "emission") |> 
+  rename(greenhouse_gas = "Gas") |> 
+  mutate(year = as.numeric(year), emission = as.numeric(emission)) |> 
+  rename(NFR_code = "NFR/CRF Group") |> 
+  left_join(codes_and_descriptions, by = "NFR_code", relationship = "many-to-many") |> 
+  filter(is.na(NFR_wide) == FALSE)
+
+
+
+write.csv(ghg_data, file = "data/ghg_data.csv")
 
 
 
