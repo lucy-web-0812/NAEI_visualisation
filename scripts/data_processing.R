@@ -43,7 +43,7 @@ files <- list.files(path = "data")
 # Keeping a record of just the files that are actually the useful csvs 
 
 year_assigned_files <- data.frame(files)  |>    
-  filter(str_detect(files, "20") & str_detect(files, "csv") & !str_detect(files, "NFR")) |> 
+  filter(str_detect(files, "20") & str_detect(files, "csv") & !str_detect(files, "NFR") & !str_detect(files, "green")) |> 
   mutate(year = substr(files, 1, 4)) |> 
   filter(year != "tren") |> 
   mutate(full_paths = paste0("data/",  files))
@@ -244,15 +244,16 @@ write.csv(combined_historic_and_projected, file = "data/combined_historic_and_pr
  
 
 # Attempting to also add in the Greenhouse Gas Data.... 
+# Currently some sources not working due to the fact NFR codes not in the codes and descriptions 
+# And need units on this 
 
-
-ghg_data <- read_csv("data/greenhouse_gases_1990_to_2022.csv") |> 
+ghg_data <- read_csv("data/greenhouse_gases_1990_to_2022_a.csv") |> 
   pivot_longer(cols = c("1990":"2022"), names_to = "year", values_to = "emission") |> 
   rename(greenhouse_gas = "Gas") |> 
   mutate(year = as.numeric(year), emission = as.numeric(emission)) |> 
   rename(NFR_code = "NFR/CRF Group") |> 
-  left_join(codes_and_descriptions, by = "NFR_code", relationship = "many-to-many") |> 
-  filter(is.na(NFR_wide) == FALSE)
+  left_join(codes_and_descriptions, by = "NFR_code", relationship = "many-to-many") #|> 
+ # filter(is.na(NFR_wide) == FALSE)
 
 
 

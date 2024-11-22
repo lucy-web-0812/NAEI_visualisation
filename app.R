@@ -6,6 +6,7 @@ library(plotly)
 library(bslib)
 library(scales)
 library(RColorBrewer)
+library(shinydashboard)
 
 # ---------- Preprocessing required is in the script data_processing ------------
 # The output of this script is the combined_historic_and_projected csv dataset
@@ -17,7 +18,7 @@ combined_historic_and_projected <- read.csv("data/combined_historic_and_projecte
 
 list_of_pollutants_and_units <- read.csv("data/list_of_pollutants.csv") |> 
   select(-"X") |> 
-  mutate(Pollutant = ifelse(Pollutant == "Total 1-4", "Total PAHs", Pollutant))
+  mutate(pollutant = ifelse(Pollutant == "Total 1-4", "Total PAHs", Pollutant))
 
 totals <- read.csv("data/totals.csv") |> 
   mutate(year = as.Date(year, format = "%Y")) |> 
@@ -44,132 +45,147 @@ colour_mappings <- setNames(source_colour_mappings$colour, source_colour_mapping
 
 # ----- The user interface ------------   
 
-ui <- fluidPage(
+ui <- dashboardPage(
+  skin = "blue", 
   
- 
+  dashboardHeader(title = "NAEI Visualiser"),
   
-  tags$head(
-    tags$style(HTML("
-    .navbar.navbar-inverse {
-      background-color: #8CC084;
-      border-color: #8CC084;
-      border-radius: 10px;
-    }
-    .navbar.navbar-inverse .navbar-brand {
-      color: #FFFFFF;
-    }
-    .navbar.navbar-inverse .navbar-nav > li > a {
-      color: #FFFFFF;
-    }
-    .navbar.navbar-inverse .navbar-nav > li > a:hover,
-    .navbar.navbar-inverse .navbar-nav > li > a:focus {
-      background-color: #FFFFFF !important;
-      color: #783F8E !important;
-    }
-    .navbar.navbar-inverse .navbar-nav > .active > a,
-    .navbar.navbar-inverse .navbar-nav > .active > a:hover,
-    .navbar.navbar-inverse .navbar-nav > .active > a:focus {
-      background-color: #FFFFFF !important;
-      color: #783F8E !important;   
-    }
-    .title-banner {
-      background-color: #004643; 
-      color: white; 
-      padding: 15px;
-      text-align: center; 
-      font-size: 24px;
-      font-weight: bold;
-      border-radius: 5px;
-      margin-bottom: 0px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .full-width-tabs .nav-tabs {
-      width: 100%;
-      display: flex;
-      font-weight: bold;
-      justify-content: space-around;
-      outline-color: darkgreen;
-    }
-  ")),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("   Air Pollutants", icon = icon("head-side-cough"), 
+               menuSubItem("Totals", tabName = "air_pollutants_totals", icon = icon("chart-line")), 
+               menuSubItem("By Source", tabName = "air_pollutants_by_source", icon = icon("layer-group"))),
+      menuItem("   Greenhouse Gases", icon = icon("cloud"), 
+               menuSubItem("Totals", tabName = "ghg_totals", icon = icon("chart-line")), 
+               menuSubItem("By Source", tabName = "ghg_by_source", icon = icon("layer-group")))
     
+  )),
+  
+  dashboardBody(
+    tags$head(
+      tags$style(HTML("
+        .skin-blue .main-header .navbar {
+          background-color: #668122; 
+        }
+        
+        .skin-blue .main-header .logo {
+          background-color: #668122; /* Green background */
+          color: #FFFFFF; /* White text */
+          transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Logo background and text color on hover */
+        .skin-blue .main-header .logo:hover {
+          background-color: #FFE3DC; /* Pink background */
+          color: #000000; /* Black text */
+        }
+        
+        /* Sidebar background color */
+        .skin-blue .main-sidebar {
+          background-color: #383F51; 
+          transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Sidebar menu item colors */
+        .skin-blue .sidebar-menu > li.active > a,
+        .skin-blue .sidebar-menu > li:hover > a {
+          background-color: #ff69b4; 
+          color: #FFFFFF; 
+        }
+        
+        .skin-blue .sidebar-menu > li > a {
+          color: #FFFFFF; 
+        }
+        
+        /* Sidebar item hover effects */
+        .skin-blue .sidebar-menu > li > a:hover {
+          background-color: #ff69b4; /* Darker pink on hover */
+          transition: background-color 0.3s, color 0.3s;
+          color: #FFFFFF;
+        }
+        
+        .content-wrapper {
+          background-color: #ffffff; 
+        }
+        
+        
+      "))
+    ),
     
-    tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"),
+  
     
-    tags$style(HTML("
-    body {
-      font-family: 'Roboto', sans-serif;
-    }
-    .navbar.navbar-inverse .navbar-brand {
-      font-weight: 500;
-    }
-  "))
-  ), 
-  
-  
-  titlePanel(div("National Atmospheric Emissions Inventory Visualiser", class = "title-banner"), windowTitle = "NAEI Projections"),
-  
-  
-  navbarPage(title = tags$a(href = "https://naei.energysecurity.gov.uk/air-pollutants/air-pollutant-emissions-data", "All data is taken from the UK NAEI", style = "color: #FFFFFF; text-decoration: none;"), inverse = TRUE,
-             
-             # First page focusing on the the totals         
-             
-             tabPanel("Air Pollutant Totals", 
-                      fluidRow(
-                        column(4, selectInput("relative_or_absolute", "Change the y axis scale:", choices = c("Relative to baseline" = "emissions_relative_to_baseline", "Absolute" = "emission")))), 
-                      fluidRow(column(8, plotlyOutput("totals_plot")))),        
-             # The second page            
-             
-             tabPanel("Air Pollutants By Source",
-                      
-                      sidebarLayout(
-                        
-                        sidebarPanel(
-                          
-                          width = 4,
-                          
-                          p("Use the drop down boxes below to select a pollutant, a NFR category and the subcatergories of interest. A graph will appear below which is interactive; drag the x and y scales to change them, double click to reset the axes."),
-                          
-                          selectInput("selected_pollutant", "Select Pollutants", choices = unique(combined_historic_and_projected$pollutant), multiple = TRUE),
-                          
-                          selectInput("selected_source", "Select Source", choices = unique(combined_historic_and_projected$source_description), multiple = TRUE),
-                          
-                          h3("2022 top pollution sources:"), tableOutput("top_sources")),  
-                        
-                        
-                        mainPanel(
-                          fluidRow(
-                            column(12, h3("Trends over time:"), plotlyOutput("line_graphs_one_category"))
-                          )))
-                      
-             ),
-             
-             
-             tabPanel("Greenhouse Gases By Source",
-                      
-                      sidebarLayout(
-                        
-                        sidebarPanel(
-                          
-                          width = 4,
-                          
-                          p("Use the drop down boxes below to select a greenhouse gas, a NFR category and the subcatergories of interest. A graph will appear below which is interactive; drag the x and y scales to change them, double click to reset the axes."),
-                          
-                          selectInput("selected_ghg", "Select Greenhouse Gases", choices = unique(ghg_data$greenhouse_gas), multiple = TRUE),
-                          
-                          selectInput("selected_source_ghg", "Select Source", choices = unique(ghg_data$Source), multiple = TRUE),
-                          
-                          h3("2022 top GHG sources:"), tableOutput("top_sources_ghg")),  
-                        
-                        
-                        mainPanel(
-                          fluidRow(
-                            column(12, h3("Trends over time:"), plotlyOutput("line_graphs_one_category_ghg"))
-                          )))
-                      
-             )
-             
-             ))
-
+    tabItems(
+      # First page - Air Pollutant Totals
+      tabItem(tabName = "air_pollutants_totals",
+              
+              h2("Relative and absolute change in pollutants over time:"), 
+              
+              fluidRow(
+                column(4, selectInput("relative_or_absolute", "Change the y axis scale:", choices = c("Relative to baseline" = "emissions_relative_to_baseline", "Absolute" = "emission")))
+              ),
+              fluidRow(column(8, plotlyOutput("totals_plot")))
+      ),
+      
+      # Second page - Air Pollutants By Source
+      tabItem(tabName = "air_pollutants_by_source",
+              
+              h2("Air Pollutants By Source:"), 
+              
+              
+              sidebarLayout(
+                sidebarPanel(
+                  width = 4,
+                  p("Use the drop down boxes below to select a pollutant, a NFR category, and the subcategories of interest."),
+                  selectInput("selected_pollutant", "Select Pollutants", choices = unique(combined_historic_and_projected$pollutant), multiple = TRUE),
+                  selectInput("selected_source", "Select Source", choices = unique(combined_historic_and_projected$source_description), multiple = TRUE),
+                  downloadButton("source_data_download", label = "Download this data"),
+                  h3("2022 top pollution sources:"), tableOutput("top_sources")
+                ),
+                mainPanel(
+                  h3("Trends over time:"),
+                  plotlyOutput("line_graphs_one_category")
+                )
+              )
+      ),
+      
+      # Third page - Greenhouse Gases Totals -- IN DeVELOPMENT
+      tabItem(tabName = "ghg_totals",
+              
+              h2("Relative and absolute change in greenhouse gases over time:"),
+              
+              h3("In development...."), 
+              
+              fluidRow(
+                column(4, selectInput("relative_or_absolute", "Change the y axis scale:", choices = c("Relative to baseline" = "emissions_relative_to_baseline", "Absolute" = "emission")))
+              ),
+              fluidRow(column(8, plotlyOutput("totals_plot_ghg")))
+      ), 
+      
+      
+      
+      # Fourth page - Greenhouse Gases by Source
+      tabItem(tabName = "ghg_by_source",
+              
+              h2("Greenhouse Gases By Source:"),
+              
+              sidebarLayout(
+                sidebarPanel(
+                  width = 4,
+                  p("Use the drop down boxes below to select a greenhouse gas, a NFR category, and the subcategories of interest."),
+                  selectInput("selected_ghg", "Select Greenhouse Gases", choices = unique(ghg_data$greenhouse_gas), multiple = TRUE),
+                  selectInput("selected_source_ghg", "Select Source", choices = unique(ghg_data$Source), multiple = TRUE),
+                  downloadButton("source_data_download_ghg", label = "Download this data"),
+                  h3("2022 top GHG sources:"), tableOutput("top_sources_ghg")
+                ),
+                mainPanel(
+                  h3("Trends over time:"),
+                  plotlyOutput("line_graphs_one_category_ghg")
+                )
+              )
+      )
+    )
+  )
+)
 
 
 
@@ -232,9 +248,9 @@ server <- function(input, output, session){
                          "Emission:", round(emission_long, 2), "<br>",
                          "Pollutant:", pollutant, "<br>",
                          "Data Source:", data_source
-                       ))) +
-        geom_line(aes(x = year, y = emission_long, colour = pollutant, linetype = data_source)) +
-        scale_color_brewer(palette = "Dark2") +
+                       )), show.legend = FALSE) +
+        geom_line(aes(x = year, y = emission_long, colour = pollutant, linetype = data_source), show.legend = FALSE) +
+        scale_color_brewer(name = "Pollutant", palette = "Dark2") +
         scale_x_date(name = "Year", limits = as.Date(c("1970-01-01", "2050-01-01")), breaks = seq(as.Date("1970-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
         scale_y_continuous(name =   
                              y_axis_label(), limits = c(0, NA), expand = c(0,0)) +
@@ -242,7 +258,8 @@ server <- function(input, output, session){
         theme(panel.grid.major.y = element_line(colour = "lightgrey"),
               strip.background = element_rect(colour = "white"),
               strip.placement = "bottom") +
-        theme(legend.position = "none") +
+        theme(legend.position = "right") +
+        guides(colour = guide_legend(override.aes = list(shape = NA, linetype = NA))) + 
         theme(axis.title = element_text(size = 20)),
       height = 600,
       width = 1000, 
@@ -311,7 +328,28 @@ server <- function(input, output, session){
               strip.text = element_text(size = 10)), height = 600, width = 1000, tooltip = "text")
   })
   
+ 
   
+# If the user wants to download that data..... 
+  
+  
+  output$source_data_download <- downloadHandler(
+    filename = function() {
+      paste0(input$selected_pollutant,"_", input$selected_source,".csv")
+    },
+    content = function(file) {
+      
+      download_content <- selected_source() |> 
+        select(NFR_wide.x:status) |> 
+        rename(NFR_decsription = NFR_wide.x) |> 
+        left_join(list_of_pollutants_and_units, by = "pollutant")
+      
+      write.csv(download_content, file, row.names = FALSE)
+    }
+  )
+  
+  
+   
   
 # Now the GHG section..... 
   
@@ -347,8 +385,8 @@ server <- function(input, output, session){
     
     ggplotly(
       ggplot(selected_source_ghg()) +
-        geom_line(aes(x=year, y = emission, colour = Activity)) +
-        geom_point(aes(x=year, y = emission, colour = Activity, 
+        geom_line(aes(x=year, y = emission, colour = interaction(Activity, Source), group = source_description)) +
+        geom_point(aes(x=year, y = emission, colour = interaction(Activity, Source), group = source_description,
                        text = paste(
                          "Year:", format(year, "%Y"), "<br>",
                          "Emissions:", round(emission, 2), "<br>",
@@ -358,7 +396,7 @@ server <- function(input, output, session){
                        ))) +
         scale_y_continuous(name = "Emissions", limits = c(0,NA)) +
         facet_wrap(~greenhouse_gas , scales = "free_y", ncol = 2) +
-        scale_x_date(name = "Year", limits = as.Date(c("1990-01-01", "2050-01-01")), breaks = seq(as.Date("1990-01-01"), as.Date("2050-01-01"), by = "10 years"), labels = date_format("%Y")) +
+        scale_x_date(name = "Year", limits = as.Date(c("1990-01-01", "2025-01-01")), breaks = seq(as.Date("1990-01-01"), as.Date("2025-01-01"), by = "5 years"), labels = date_format("%Y")) +
         theme_classic() +
         scale_colour_brewer(palette = "Set2") +
         theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
@@ -389,6 +427,22 @@ server <- function(input, output, session){
   output$top_sources_ghg <- renderTable(top_sources_ghg_table() |> 
                                       select("NFR_code", "greenhouse_gas", "emission", "source_description") |> 
                                       rename("NFR Code" = NFR_code, "Greenhouse Gas" = "greenhouse_gas", "Emission (variable units)" = "emission", "Source" = "source_description"))
+  
+  
+  output$source_data_download_ghg <- downloadHandler(
+    filename = function() {
+      paste0(input$selected_ghg,"_", input$selected_source,".csv")
+    },
+    content = function(file) {
+      
+      download_content <- selected_source_ghg() |> 
+        select(greenhouse_gas:emission)
+      
+      write.csv(download_content, file, row.names = FALSE)
+    }
+  )
+  
+  
   
   
   session$onSessionEnded(function() {
