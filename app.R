@@ -1,5 +1,4 @@
 library(readxl)
-library(dplyr)
 library(tidyverse)
 library(shiny)
 library(plotly)
@@ -7,12 +6,13 @@ library(bslib)
 library(scales)
 library(RColorBrewer)
 library(shinydashboard)
+library(DT)
 
 # ---------- Preprocessing required is in the script data_processing ------------
 # The output of this script is the combined_historic_and_projected csv dataset
 
 
-combined_historic_and_projected <- read.csv("data/combined_historic_and_projected.csv") |> 
+combined_historic_and_projected <- read.csv("data/comparative_to_baseline_test.csv") |> # just changed this line here
   mutate(year = as.Date(year, format = "%Y")) |> 
   select(-"X") 
 
@@ -30,18 +30,39 @@ ghg_data <- read.csv("data/ghg_data.csv") |>
   mutate(year = as.Date(paste0(year, "-01-01"), format = "%Y-%m-%d"))
 
 
+# Air Pollution Colours....
 
-n_colours <- length(unique(combined_historic_and_projected$source_description)) 
+n_colours <- length(unique(combined_historic_and_projected$source_description))
 
 set.seed(123)
 
 
-source_colour_mappings <- data.frame( 
-  source_description = unique(combined_historic_and_projected$source_description), 
+source_colour_mappings <- data.frame(
+  source_description = unique(combined_historic_and_projected$source_description),
   colour = sample(colorRampPalette(brewer.pal(9, "Paired"))(n_colours), n_colours) # Sample makes the colours random rather than in order
 )
 
 colour_mappings <- setNames(source_colour_mappings$colour, source_colour_mappings$source_description)
+
+
+
+
+# Greenhouse gas colours.... 
+
+n_colours_ghg <- length(unique(interaction(ghg_data$Activity, ghg_data$Source)))
+
+source_colour_mappings_ghg <- data.frame(
+  Source = unique(interaction(ghg_data$Activity, ghg_data$Source)),
+  colour = sample(colorRampPalette(brewer.pal(9, "Paired"))(n_colours_ghg), n_colours_ghg) # Sample makes the colours random rather than in order
+)
+
+colour_mappings_ghg <- setNames(source_colour_mappings_ghg$colour, source_colour_mappings_ghg$Source)
+
+
+
+
+
+
 
 # ----- The user interface ------------   
 
@@ -52,67 +73,78 @@ ui <- dashboardPage(
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem("   Air Pollutants", icon = icon("head-side-cough"), 
-               menuSubItem("Totals", tabName = "air_pollutants_totals", icon = icon("chart-line")), 
+      menuItem("   Air Pollutants", icon = icon("head-side-cough"),
+               menuSubItem("Totals", tabName = "air_pollutants_totals", icon = icon("chart-line")),
                menuSubItem("By Source", tabName = "air_pollutants_by_source", icon = icon("layer-group"))),
-      menuItem("   Greenhouse Gases", icon = icon("cloud"), 
-               menuSubItem("Totals", tabName = "ghg_totals", icon = icon("chart-line")), 
+      menuItem("   Greenhouse Gases", icon = icon("cloud"),
+               menuSubItem("Totals", tabName = "ghg_totals", icon = icon("chart-line")),
                menuSubItem("By Source", tabName = "ghg_by_source", icon = icon("layer-group")))
-    
+
   )),
   
   dashboardBody(
-    tags$head(
-      tags$style(HTML("
-        .skin-blue .main-header .navbar {
-          background-color: #668122; 
-        }
-        
-        .skin-blue .main-header .logo {
-          background-color: #668122; /* Green background */
-          color: #FFFFFF; /* White text */
-          transition: background-color 0.3s, color 0.3s;
-        }
-        
-        /* Logo background and text color on hover */
-        .skin-blue .main-header .logo:hover {
-          background-color: #FFE3DC; /* Pink background */
-          color: #000000; /* Black text */
-        }
-        
-        /* Sidebar background color */
-        .skin-blue .main-sidebar {
-          background-color: #383F51; 
-          transition: background-color 0.3s, color 0.3s;
-        }
-        
-        /* Sidebar menu item colors */
-        .skin-blue .sidebar-menu > li.active > a,
-        .skin-blue .sidebar-menu > li:hover > a {
-          background-color: #ff69b4; 
-          color: #FFFFFF; 
-        }
-        
-        .skin-blue .sidebar-menu > li > a {
-          color: #FFFFFF; 
-        }
-        
-        /* Sidebar item hover effects */
-        .skin-blue .sidebar-menu > li > a:hover {
-          background-color: #ff69b4; /* Darker pink on hover */
-          transition: background-color 0.3s, color 0.3s;
-          color: #FFFFFF;
-        }
-        
-        .content-wrapper {
-          background-color: #ffffff; 
-        }
-        
-        
-      "))
-    ),
     
-  
+    tags$head(
+      tags$link(
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap",
+        rel = "stylesheet"
+      ),
+      
+      tags$style(HTML("
+      body {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .sidebar-menu > li > a {
+        font-weight: 400;
+      }
+      .skin-blue .main-header .navbar {
+       background-color: #C3E1E3;
+      } 
+     
+      .skin-blue .main-sidebar {
+        background-color: #383F51;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .skin-blue .sidebar-menu > li.active > a,
+      .skin-blue .sidebar-menu > li:hover > a {
+        background-color: #ff69b4;
+        color: #FFFFFF;
+      }
+      .skin-blue .sidebar-menu > li > a {
+        color: #FFFFFF;
+        border-radius: 4px;
+      }
+      .skin-blue .sidebar-menu > li > a:hover {
+        background-color: #ff69b4;
+        color: #FFFFFF;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .content-wrapper {
+        background-color: #ffffff;
+      }
+      .table-striped-green tbody tr:nth-child(odd) {
+        background-color: #ACC3B8;
+      }
+      .table-striped-green tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+      .skin-blue .main-header .logo {
+      text-overflow: ellipsis; /* Show ellipsis for overflow text */
+      background-color: #C3E1E3; /* Correct background-color  */
+      color: #000000; /* Ensure title text is visible */
+      font-size: 24px; /* Adjust title size */
+      font-weight: 700; /* Bold text for emphasis */
+      padding-left: 10px; /* Add some spacing */
+      }
+      .box {
+        border-radius: 8px;
+      }
+      .box {
+         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    "))),
     
     tabItems(
       # First page - Air Pollutant Totals
@@ -128,25 +160,48 @@ ui <- dashboardPage(
       
       # Second page - Air Pollutants By Source
       tabItem(tabName = "air_pollutants_by_source",
-              
               h2("Air Pollutants By Source:"), 
               
-              
-              sidebarLayout(
-                sidebarPanel(
+              # Top-level layout
+              fluidRow(
+                # Sidebar with inputs and table
+                column(
                   width = 4,
-                  p("Use the drop down boxes below to select a pollutant, a NFR category, and the subcategories of interest."),
-                  selectInput("selected_pollutant", "Select Pollutants", choices = unique(combined_historic_and_projected$pollutant), multiple = TRUE),
-                  selectInput("selected_source", "Select Source", choices = unique(combined_historic_and_projected$source_description), multiple = TRUE),
-                  downloadButton("source_data_download", label = "Download this data"),
-                  h3("2022 top pollution sources:"), tableOutput("top_sources")
-                ),
-                mainPanel(
-                  h3("Trends over time:"),
+                  wellPanel(
+                    p("Use the drop-down boxes below to select a pollutant, a NFR category, and the subcategories of interest."),
+                    selectInput(
+                      "selected_pollutant", 
+                      "Select Pollutants", 
+                      choices = unique(combined_historic_and_projected$pollutant), 
+                      multiple = TRUE
+                    ),
+                    
+                    selectInput(
+                      "selected_source", 
+                      "Select Source", 
+                      choices = unique(combined_historic_and_projected$source_description), 
+                      multiple = TRUE
+                    ),
+                    
+                    downloadButton("source_data_download", label = "Download this data")
+                  ),
+                  br(), # Add spacing between the sidebar and the table
+                  
+                  div(
+                    style = "background-color: #F9F9F9; padding: 15px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);",
+                    h3("2022 Top Pollution Sources:"),
+                    dataTableOutput("top_sources")
+                  )),
+                
+                # Main panel for graph
+                column(
+                  width = 8,
+                  h3("Trends Over Time:"),
                   plotlyOutput("line_graphs_one_category")
                 )
               )
-      ),
+      ), 
+      
       
       # Third page - Greenhouse Gases Totals -- IN DeVELOPMENT
       tabItem(tabName = "ghg_totals",
@@ -165,27 +220,48 @@ ui <- dashboardPage(
       
       # Fourth page - Greenhouse Gases by Source
       tabItem(tabName = "ghg_by_source",
+              h2("Greenhouse Gases By Source:"), 
               
-              h2("Greenhouse Gases By Source:"),
-              
-              sidebarLayout(
-                sidebarPanel(
+              # Main layout
+              fluidRow(
+                # Sidebar for GHG inputs and table
+                column(
                   width = 4,
-                  p("Use the drop down boxes below to select a greenhouse gas, a NFR category, and the subcategories of interest."),
-                  selectInput("selected_ghg", "Select Greenhouse Gases", choices = unique(ghg_data$greenhouse_gas), multiple = TRUE),
-                  selectInput("selected_source_ghg", "Select Source", choices = unique(ghg_data$Source), multiple = TRUE),
-                  downloadButton("source_data_download_ghg", label = "Download this data"),
-                  h3("2022 top GHG sources:"), tableOutput("top_sources_ghg")
+                  wellPanel(
+                    p("Use the drop-down boxes below to select a greenhouse gas, a NFR category, and the subcategories of interest."),
+                    selectInput(
+                      "selected_ghg", 
+                      "Select Greenhouse Gases", 
+                      choices = unique(ghg_data$greenhouse_gas), 
+                      multiple = TRUE
+                    ),
+                    selectInput(
+                      "selected_source_ghg", 
+                      "Select Source", 
+                      choices = unique(ghg_data$Source), 
+                      multiple = TRUE
+                    ),
+                    downloadButton("source_data_download_ghg", label = "Download this data")
+                  ),
+                  br(),
+                  div(
+                    style = "background-color: #f9f9f9; padding: 15px; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);",
+                    h3("2022 Top GHG Sources:"),
+                    dataTableOutput("top_sources_ghg")
+                  )
                 ),
-                mainPanel(
-                  h3("Trends over time:"),
+                
+                # Main panel for GHG graph
+                column(
+                  width = 8,
+                  h3("Trends Over Time:"),
                   plotlyOutput("line_graphs_one_category_ghg")
                 )
               )
       )
+      
     )
-  )
-)
+  ))
 
 
 
@@ -216,18 +292,27 @@ server <- function(input, output, session){
   top_sources_table <- reactive({
     req(input$selected_pollutant) 
     filter(combined_historic_and_projected, pollutant %in% input$selected_pollutant) |> 
-      mutate(year = substring(as.character(year), 1,4) ) |> 
-      filter(year == "2022") |> 
+      mutate(year = substring(as.character(year), 1,4), emission = round(emission,2) ) |> 
+      filter(year == "2022") |>
       group_by(pollutant) |> 
-      arrange(desc(emission)) |> 
-      do(head(., n=5)) |> 
       arrange(desc(emission)) 
   })
   
   
-  output$top_sources <- renderTable(top_sources_table() |> 
-                                      select("NFR_code", "pollutant", "emission", "source_description") |> 
-                                      rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (variable units)" = "emission", "Source" = "source_description"))
+  
+  output$top_sources <- DT::renderDT({
+    top_sources_table() |>
+      select("NFR_code", "pollutant", "emission", "source_description") |> 
+      rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (variable units)" = "emission", "Source" = "source_description")
+            }, 
+            options = list(
+              scrollX = TRUE,
+              pageLength = 5,    # Number of rows per page 
+              dom = 'Bfrtip',     # Add buttons for export and search
+              style = "bootstrap4" # Modern styling
+            )) 
+            
+  
   
   y_axis_label <- reactive({
     if (input$relative_or_absolute == "emission") {
@@ -325,6 +410,7 @@ server <- function(input, output, session){
               strip.placement = "bottom") +
         theme(legend.position = "none") +
         theme(axis.title = element_text(size = 20), 
+              plot.margin = margin(0.25,0.25,0.25,0.55, unit = "cm"),
               strip.text = element_text(size = 10)), height = 600, width = 1000, tooltip = "text")
   })
   
@@ -389,16 +475,16 @@ server <- function(input, output, session){
         geom_point(aes(x=year, y = emission, colour = interaction(Activity, Source), group = source_description,
                        text = paste(
                          "Year:", format(year, "%Y"), "<br>",
-                         "Emissions:", round(emission, 2), "<br>",
+                         "Emissions:", round(emission, 2), `Units`, "<br>",
                          "Pollution source:", Source, "<br>",
                          "Activity:", Activity, "<br>",
                          "NFR Code:", NFR_code
                        ))) +
-        scale_y_continuous(name = "Emissions", limits = c(0,NA)) +
+        scale_y_continuous(name = "Emissions", limits = c(NA,NA)) +
         facet_wrap(~greenhouse_gas , scales = "free_y", ncol = 2) +
         scale_x_date(name = "Year", limits = as.Date(c("1990-01-01", "2025-01-01")), breaks = seq(as.Date("1990-01-01"), as.Date("2025-01-01"), by = "5 years"), labels = date_format("%Y")) +
         theme_classic() +
-        scale_colour_brewer(palette = "Set2") +
+        scale_colour_manual(values = colour_mappings_ghg) +
         theme(panel.grid.major.y = element_line(colour = "lightgrey"), 
               strip.background = element_rect(colour = "white"), 
               strip.placement = "bottom") +
@@ -418,15 +504,26 @@ server <- function(input, output, session){
      mutate(year = substring(as.character(year), 1,4) ) |> 
       filter(year == "2022") |> 
       group_by(greenhouse_gas) |> 
-      arrange(desc(emission)) |> 
-      do(head(., n=5)) |> 
-      arrange(desc(emission)) 
+      arrange(desc(emission)) #|> 
+      # do(head(., n=25)) |> 
+      # arrange(desc(emission)) 
   })
   
   
-  output$top_sources_ghg <- renderTable(top_sources_ghg_table() |> 
-                                      select("NFR_code", "greenhouse_gas", "emission", "source_description") |> 
-                                      rename("NFR Code" = NFR_code, "Greenhouse Gas" = "greenhouse_gas", "Emission (variable units)" = "emission", "Source" = "source_description"))
+  output$top_sources_ghg <- DT::renderDT({
+    top_sources_ghg_table() |>
+      select("NFR_code", "greenhouse_gas", "emission", "Units", "Source") |>
+      rename("NFR Code" = NFR_code, "Greenhouse Gas" = greenhouse_gas,"Emission" = emission)
+  }, 
+  options = list(
+    scrollX = TRUE,
+    pageLength = 5,    # Number of rows per page 
+    dom = 'Bfrtip',     # Add buttons for export and search
+    style = "bootstrap4" # Modern styling
+  ),
+  class = "table table-striped table-bordered"
+  ) 
+  
   
   
   output$source_data_download_ghg <- downloadHandler(
