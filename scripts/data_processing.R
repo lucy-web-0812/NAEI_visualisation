@@ -43,7 +43,7 @@ files <- list.files(path = "data")
 # Keeping a record of just the files that are actually the useful csvs 
 
 year_assigned_files <- data.frame(files)  |>    
-  filter(str_detect(files, "20") & str_detect(files, "csv") & !str_detect(files, "NFR") & !str_detect(files, "green")) |> 
+  filter(str_detect(files, "20") & str_detect(files, "csv") & !str_detect(files, "NFR") & !str_detect(files, "green")) |> # This filtering required to remove everything else
   mutate(year = substr(files, 1, 4)) |> 
   filter(year != "tren") |> 
   mutate(full_paths = paste0("data/",  files))
@@ -136,6 +136,13 @@ ggplot(total_emissions_by_year) +
 
 pollutants_by_year <- processed_data_frame |> 
   filter(!str_detect(NFR_code, regex("total", ignore_case = TRUE)))
+
+
+
+
+
+
+
 
 # ----- TESTING OUT USING THE ALTERNATIVE MEGA SPREADSHEET DATA FOR the historic data ------- 
 
@@ -254,6 +261,9 @@ ghg_data <- read_csv("data/greenhouse_gases_1990_to_2022_a.csv") |>
   rename(NFR_code = "NFR/CRF Group") |> 
   left_join(codes_and_descriptions, by = "NFR_code", relationship = "many-to-many") #|> 
  # filter(is.na(NFR_wide) == FALSE)
+
+
+
 
 
 

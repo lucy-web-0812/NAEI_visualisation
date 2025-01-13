@@ -79,8 +79,8 @@ ui <- dashboardPage(
       menuItem("   Greenhouse Gases", icon = icon("cloud"),
                menuSubItem("Totals", tabName = "ghg_totals", icon = icon("chart-line")),
                menuSubItem("By Source", tabName = "ghg_by_source", icon = icon("layer-group")))
-
-  )),
+      
+    )),
   
   dashboardBody(
     
@@ -304,14 +304,14 @@ server <- function(input, output, session){
     top_sources_table() |>
       select("NFR_code", "pollutant", "emission", "source_description") |> 
       rename("NFR Code" = NFR_code, "Pollutant" = "pollutant", "Emission (variable units)" = "emission", "Source" = "source_description")
-            }, 
-            options = list(
-              scrollX = TRUE,
-              pageLength = 5,    # Number of rows per page 
-              dom = 'Bfrtip',     # Add buttons for export and search
-              style = "bootstrap4" # Modern styling
-            )) 
-            
+  }, 
+  options = list(
+    scrollX = TRUE,
+    pageLength = 5,    # Number of rows per page 
+    dom = 'Bfrtip',     # Add buttons for export and search
+    style = "bootstrap4" # Modern styling
+  )) 
+  
   
   
   y_axis_label <- reactive({
@@ -414,9 +414,9 @@ server <- function(input, output, session){
               strip.text = element_text(size = 10)), height = 600, width = 1000, tooltip = "text")
   })
   
- 
   
-# If the user wants to download that data..... 
+  
+  # If the user wants to download that data..... 
   
   
   output$source_data_download <- downloadHandler(
@@ -435,21 +435,21 @@ server <- function(input, output, session){
   )
   
   
-   
   
-# Now the GHG section..... 
+  
+  # Now the GHG section..... 
   
   selected_data_ghg <- reactive(ghg_data |> # Test to see what one of these looks like
-                              filter(greenhouse_gas %in% input$selected_ghg) |> 
-                              filter(NFR_mid != "NA") 
-                            
+                                  filter(greenhouse_gas %in% input$selected_ghg) |> 
+                                  filter(NFR_mid != "NA") 
+                                
   )
   
   
   
   selected_source_ghg <- reactive(ghg_data |> # Test to see what one of these looks like
-                                filter(greenhouse_gas %in% input$selected_ghg) |> 
-                                filter(Source %in% input$selected_source_ghg) 
+                                    filter(greenhouse_gas %in% input$selected_ghg) |> 
+                                    filter(Source %in% input$selected_source_ghg) 
   )
   
   
@@ -501,12 +501,12 @@ server <- function(input, output, session){
   top_sources_ghg_table <- reactive({
     req(input$selected_ghg) 
     filter(ghg_data, greenhouse_gas %in% input$selected_ghg) |> 
-     mutate(year = substring(as.character(year), 1,4) ) |> 
+      mutate(year = substring(as.character(year), 1,4) ) |> 
       filter(year == "2022") |> 
       group_by(greenhouse_gas) |> 
       arrange(desc(emission)) #|> 
-      # do(head(., n=25)) |> 
-      # arrange(desc(emission)) 
+    # do(head(., n=25)) |> 
+    # arrange(desc(emission)) 
   })
   
   
