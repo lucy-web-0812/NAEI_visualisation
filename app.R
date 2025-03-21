@@ -9,10 +9,10 @@ library(shinydashboard)
 library(DT)
 
 # ---------- Preprocessing required is in the script data_processing ------------
-# The output of this script is the combined_historic_and_projected csv dataset
+# The output of that script is the combined_historic_and_projected csv dataset
 
 
-combined_historic_and_projected <- read.csv("data/comparative_to_baseline_test.csv") |> # just changed this line here
+combined_historic_and_projected <- read.csv("data/combined_historic_and_projected.csv") |> # just changed this line here
   mutate(year = as.Date(year, format = "%Y")) |> 
   select(-"X") 
 
@@ -28,6 +28,72 @@ totals <- read.csv("data/totals.csv") |>
 
 ghg_data <- read.csv("data/ghg_data.csv") |> 
   mutate(year = as.Date(paste0(year, "-01-01"), format = "%Y-%m-%d"))
+
+
+
+# Sunburst function.... 
+
+
+
+sunburst_dataprocessing <- function(pollutant_species, selected_year){
+  
+  df <- combined_historic_and_projected |> 
+    filter(pollutant == pollutant_species) |> 
+    filter(year == selected_year) |> 
+    select(c(source_description, NFR_mid, NFR_wide.y, emission)) |> 
+    rename(NFR_wide = NFR_wide.y) 
+  
+  
+  # Preparing the data for the chart.... 
+  
+  # firstly get the total... 
+  
+  
+  df_total <- df |> 
+    summarise(emission = sum(emission, na.rm = T)) |> 
+    mutate(label = "Total", parent = "") 
+  
+  
+  df_NFR_wide <- df |> 
+    group_by(NFR_wide) |> 
+    summarise(emission = sum(emission, na.rm = T)) |> 
+    mutate(parent = "Total") |> 
+    rename(label = NFR_wide)
+  
+  
+  # And all the totals for the NFR_mid
+  
+  df_NFR_mid <- df |> 
+    group_by(NFR_mid) |> 
+    summarise(emission = sum(emission, na.rm = T)) |> 
+    left_join(df, join_by(NFR_mid == NFR_mid)) |> 
+    #rename(parent = NFR_wide) |> 
+    mutate(parent = "Total") |> 
+    select(NFR_mid, parent, emission.x) |> 
+    rename(label = NFR_mid, emission = emission.x) |> 
+    filter((label == parent) == F) |> 
+    distinct()
+  
+  df_source <- df |> 
+    filter(is.na(emission) == F) |> 
+    select(c(source_description, NFR_mid, emission)) |> 
+    rename(label = source_description, parent = NFR_mid) |> 
+    filter((label == parent) == F) |> 
+    distinct()
+  
+  
+  hierachial_data <<- bind_rows(
+    df_total, 
+    #df_NFR_wide, 
+    df_NFR_mid, 
+    df_source
+  ) 
+  
+  
+  
+  
+}
+
 
 
 # Air Pollution Colours....
@@ -75,6 +141,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("   Air Pollutants", icon = icon("head-side-cough"),
                menuSubItem("Totals", tabName = "air_pollutants_totals", icon = icon("chart-line")),
+               menuSubItem("Sunburst Charts", tabName = "air_pollutants_sunburst", icon = icon("sun")),
                menuSubItem("By Source", tabName = "air_pollutants_by_source", icon = icon("layer-group"))),
       menuItem("   Greenhouse Gases", icon = icon("cloud"),
                menuSubItem("Totals", tabName = "ghg_totals", icon = icon("chart-line")),
@@ -157,6 +224,25 @@ ui <- dashboardPage(
               ),
               fluidRow(column(8, plotlyOutput("totals_plot")))
       ),
+      
+      # Sunburst charts.... 
+      
+      tabItem(tabName = "air_pollutants_sunburst",
+              
+              
+              fluidRow(
+                column(3, selectInput("pollutant",
+                                      "Pollutant:",
+                                      choices = unique(combined_historic_and_projected$pollutant)), 
+                       selectInput("year",
+                                   "Year:",
+                                   choices = unique(combined_historic_and_projected$year)))
+              ),
+              fluidRow(column(9, plotlyOutput("sunburstplot", width = "100%", height = "700px")))
+      ),
+      
+      
+      
       
       # Second page - Air Pollutants By Source
       tabItem(tabName = "air_pollutants_by_source",
@@ -286,6 +372,28 @@ server <- function(input, output, session){
                                 filter(pollutant %in% input$selected_pollutant) |> 
                                 filter(source_description %in% input$selected_source) 
   )
+  
+  
+  
+  hierachial_data <- reactive(
+    sunburst_dataprocessing(input$pollutant, input$year)
+  )
+  
+  
+  
+  output$sunburstplot <-  renderPlotly({
+    plot_ly( 
+      labels = hierachial_data()$label,
+      parents = hierachial_data()$parent,
+      values = hierachial_data()$emission,
+      type = 'sunburst',
+      branchvalues = 'total') |> 
+      layout(
+        margin = list(l = 0, r = 00, t = 0, b = 0)
+      )
+  })  
+  
+  
   
   
   
